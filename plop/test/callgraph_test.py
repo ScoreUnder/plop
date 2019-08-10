@@ -1,4 +1,3 @@
-import logging
 import unittest
 
 from plop.callgraph import CallGraph, Node
@@ -13,14 +12,11 @@ class SimpleCallgraphTest(unittest.TestCase):
         self.graph = graph
 
     def test_basic_attrs(self):
-        logging.debug(self.graph.nodes)
-        logging.debug(self.graph.edges)
         self.assertEqual(len(self.graph.nodes), 4)
         self.assertEqual(len(self.graph.edges), 5)
 
     def test_top_edges(self):
         top_edges = self.graph.get_top_edges('time', 3)
-        logging.debug(top_edges)
         summary = [(e.parent.id, e.child.id, e.weights['time']) for e in top_edges]
         self.assertEqual(summary, [
                 (2, 3, 9),
@@ -30,7 +26,6 @@ class SimpleCallgraphTest(unittest.TestCase):
 
     def test_top_nodes(self):
         top_nodes = self.graph.get_top_nodes('time', 2)
-        logging.debug(top_nodes)
         summary = [(n.id, n.weights['time']) for n in top_nodes]
         self.assertEqual(summary, [
                 (3, 12),
