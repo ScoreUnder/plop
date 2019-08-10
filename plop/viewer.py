@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from collections import Counter
+from collections import defaultdict
 import os
 
 from tornado.ioloop import IOLoop
@@ -61,7 +61,7 @@ def profile_to_json(filename):
     # High-degree nodes are generally common utility functions, and
     # creating edges from all over the graph tends to obscure more than
     # it helps.
-    degrees = Counter()
+    degrees = defaultdict(int)
     dropped = set()
     for edge in six.itervalues(graph.edges):
         degrees[edge.child.id] += 1
