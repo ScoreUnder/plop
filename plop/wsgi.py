@@ -1,7 +1,8 @@
 import logging
 import random
 import time
-import thread
+import six
+import six.moves._thread as thread
 import socket
 import os
 import json
@@ -38,13 +39,13 @@ class PlopMiddleware(object):
 
             try:
                 self.save_data(environ, start, stop, collector)
-            except Exception, e:
+            except Exception as e:
                 self.logger.exception(e)
 
     def save_data(self, environ, start, stop, collector):
         data = {}
         data['hostname'] = self.hostname
-        data['environ'] = dict((k, v) for k, v in environ.iteritems() if isinstance(v, basestring))
+        data['environ'] = dict((k, v) for k, v in six.iteritems(environ) if isinstance(v, six.string_types))
         data['start_time'] = start
         data['stop_time'] = stop
         data['thread_ident'] = thread.get_ident()
@@ -52,7 +53,7 @@ class PlopMiddleware(object):
         collector.filter(25)
 
         samples = []
-        for stack, frequency in collector.stack_counts.iteritems():
+        for stack, frequency in six.iteritems(collector.stack_counts):
             frames = []
             for elm in stack:
                 frame = {}
