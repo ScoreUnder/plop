@@ -143,6 +143,7 @@ def main():
                         type=int)
     parser.add_argument("--max-stacks", help=("Number of most frequent stacks to store."
                         " Ignored for Flamegraph output."), type=int, default=50)
+    parser.add_argument("--output", "-o", help="Save output into FILE", metavar="FILE", type=str)
     parser.add_argument("target", help="Module or script to run")
     parser.add_argument("arguments", nargs=argparse.REMAINDER,
                         help="Pass-through arguments for the profiled application")
@@ -160,16 +161,19 @@ def main():
         sys.stderr.flush()
         sys.exit(1)
 
-    try:  # This is equivalent to os.makedirs('profiles', exist_ok=True)
-        os.mkdir('profiles')
-    except OSError as exc:
-        if exc.errno != errno.EEXIST:
-            raise
-    filename = os.path.join(
-        'profiles',
-        '%s-%s.%s' % (os.path.basename(args.target),
-                      time.strftime('%Y%m%d-%H%M-%S'),
-                      extension))
+    if args.output:
+        filename = args.output
+    else:
+        try:  # This is equivalent to os.makedirs('profiles', exist_ok=True)
+            os.mkdir('profiles')
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+        filename = os.path.join(
+            'profiles',
+            '%s-%s.%s' % (os.path.basename(args.target),
+                          time.strftime('%Y%m%d-%H%M-%S'),
+                          extension))
 
     collector = Collector(mode=args.mode, interval=args.interval)
     collector.start(duration=args.duration)
