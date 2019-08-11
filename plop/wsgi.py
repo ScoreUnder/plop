@@ -1,11 +1,12 @@
+import json
 import logging
+import os
 import random
+import socket
 import time
+
 import six
 import six.moves._thread as thread
-import socket
-import os
-import json
 
 from plop.collector import Collector
 
@@ -45,7 +46,8 @@ class PlopMiddleware(object):
     def save_data(self, environ, start, stop, collector):
         data = {}
         data['hostname'] = self.hostname
-        data['environ'] = dict((k, v) for k, v in six.iteritems(environ) if isinstance(v, six.string_types))
+        data['environ'] = dict((k, v) for k, v in six.iteritems(environ)
+                               if isinstance(v, six.string_types))
         data['start_time'] = start
         data['stop_time'] = stop
         data['thread_ident'] = thread.get_ident()

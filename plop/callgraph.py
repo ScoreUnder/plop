@@ -56,7 +56,7 @@ class CallGraph(object):
         nodes = [self.nodes.setdefault(n.id, n) for n in nodes]
         weights = Counter(weights)
         self.stacks.append(Stack(nodes, weights))
-        
+
         for i in range(len(nodes) - 1):
             parent = nodes[i]
             child = nodes[i + 1]

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# pylint: disable=abstract-method,arguments-differ
 
 from collections import defaultdict
 import os
@@ -15,6 +16,7 @@ define('debug', default=False)
 define('address', default='')
 define('datadir', default='profiles')
 
+
 class IndexHandler(RequestHandler):
     def get(self):
         files = []
@@ -25,9 +27,11 @@ class IndexHandler(RequestHandler):
         files.sort(key=lambda x: (-x[0], x[1]))
         self.render('index.html', files=[f[1] for f in files])
 
+
 class ViewHandler(RequestHandler):
     def get(self):
         self.render('force.html', filename=self.get_argument("filename"))
+
 
 class ViewFlatHandler(RequestHandler):
     def get(self):
@@ -35,8 +39,9 @@ class ViewFlatHandler(RequestHandler):
                     data=profile_to_json(self.get_argument('filename')))
 
     def embed_file(self, filename):
-        with open(os.path.join(self.settings['static_path'], filename)) as f:
-            return f.read()
+        with open(os.path.join(self.settings['static_path'], filename)) as static_file:
+            return static_file.read()
+
 
 class DataHandler(RequestHandler):
     def get(self):
@@ -49,12 +54,11 @@ def profile_to_json(filename):
     graph = CallGraph.load(abspath)
 
     top_stacks = graph.stacks
-    #top_stacks = [stack for stack in graph.stacks if stack.weights['calls'] > total*.005]
     filtered_nodes = set()
     for stack in top_stacks:
         filtered_nodes.update(stack.nodes)
     nodes = [dict(attrs=node.attrs, weights=node.weights, id=node.id)
-           for node in filtered_nodes]
+             for node in filtered_nodes]
     nodes = sorted(nodes, key=lambda n: -n['weights']['calls'])
     index = dict([(node['id'], i) for i, node in enumerate(nodes)])
 

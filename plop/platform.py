@@ -1,6 +1,8 @@
 import signal
 
 if hasattr(signal, 'setitimer'):
+    # pylint: disable=unused-import
+    # These imports are used by other files which import this module
     from signal import setitimer, ITIMER_REAL, ITIMER_VIRTUAL, ITIMER_PROF
 else:
     # python2.5 doesn't have setitimer

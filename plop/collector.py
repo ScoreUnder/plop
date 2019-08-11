@@ -25,10 +25,8 @@ class Collector(object):
         timer, sig = Collector.MODES[self.mode]
         signal.signal(sig, self.handler)
         signal.siginterrupt(sig, False)
-        self.reset()
 
-    def reset(self):
-        self.stacks = list()
+        self.stacks = []
         self.samples_remaining = 0
         self.stopping = False
         self.stopped = False
@@ -141,8 +139,8 @@ def main():
     parser.add_argument("--interval", help="Timer interval in seconds", default=0.01, type=float)
     parser.add_argument("--duration", help="Profiling duration in seconds", default=3600,
                         type=int)
-    parser.add_argument("--max-stacks", help=("Number of most frequent stacks to store."
-                        " Ignored for Flamegraph output."), type=int, default=50)
+    parser.add_argument("--max-stacks", help="Number of most frequent stacks to store."
+                        " Ignored for Flamegraph output.", type=int, default=50)
     parser.add_argument("--output", "-o", help="Save output into FILE", metavar="FILE", type=str)
     parser.add_argument("target", help="Module or script to run")
     parser.add_argument("arguments", nargs=argparse.REMAINDER,
